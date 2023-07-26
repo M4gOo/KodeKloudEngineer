@@ -1,4 +1,6 @@
 
+=========================== LINUX ============================================
+
 installed a backup agent tool on all app servers. As per the tool's requirements they need to create a user with a non-interactive shell.
 
 sudo adduser kareem -s /sbin/nologin
@@ -11,3 +13,22 @@ edit limits, nfsuser user is holding hundred of processes, which is degrading th
 vi /etc/security/limits.conf
 nfsuser         soft    nproc           1024
 nfsuser         hard    nproc           2027
+
+
+========================== GIT ==========================
+ create a bare repository /opt/demo.git 
+ sudo git init --bare /opt/demo.git
+
+sudo git add index.html
+sudo git commit -m "add index.html"
+sudo git push -u origin master
+
+git branch --list
+
+ it is not possible to delete a branch you are currently in and viewing.Usually has an ' * '
+  master
+* xfusioncorp_apps
+
+make sure to switch to another branch that you do NOT want to delete, with the git checkout
+
+
