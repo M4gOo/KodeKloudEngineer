@@ -1,0 +1,9 @@
+
+installed a backup agent tool on all app servers. As per the tool's requirements they need to create a user with a non-interactive shell.
+
+sudo adduser kareem -s /sbin/nologin
+
+why have a non-interactive shell?
+a non-interactive shell is a type of shell that doesn't interact with the user. We can run it through a script or similar. Also, it can be run through some automated process.
+
+
