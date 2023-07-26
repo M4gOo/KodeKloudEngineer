@@ -7,3 +7,7 @@ why have a non-interactive shell?
 a non-interactive shell is a type of shell that doesn't interact with the user. We can run it through a script or similar. Also, it can be run through some automated process.
 
 
+edit limits, nfsuser user is holding hundred of processes, which is degrading the performance of the server. 
+vi /etc/security/limits.conf
+nfsuser         soft    nproc           1024
+nfsuser         hard    nproc           2027
