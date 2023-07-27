@@ -15,6 +15,7 @@ nfsuser         soft    nproc           1024
 nfsuser         hard    nproc           2027
 
 
+
 ========================== GIT ==========================
  create a bare repository /opt/demo.git 
  sudo git init --bare /opt/demo.git
@@ -30,5 +31,46 @@ git branch --list
 * xfusioncorp_apps
 
 make sure to switch to another branch that you do NOT want to delete, with the git checkout
+
+
+
+====================  DOCKER ======================================
+when install docker always check the OS and the version
+
+create a container named nginx_1 using image nginx with alpine tag and make sure container is in running state.
+
+sudo docker pull alpine
+
+docker run -it --name nginx_1 -d nginx:alpine
+--name NAME the name of the container we want to create.
+:alpine - it is the tag
+alpine is the name of the image we have downloaded
+-d is the option to run the container in the background.
+
+docker ps
+
+
+stop and delete  containers runnins
+docker ps -a (list all container running and stopped)
+docker rm --force redis
+
+
+ We received a request to copy some of the data from the docker host to the container.
+ copy an encrypted file /tmp/nautilus.txt.gpg from docker host to ubuntu_latest container (running on same server) in /tmp/ location.
+docker cp /tmp/nautilus.txt.gpg  95800e3cc636:/tmp/
+docker exec -it ubuntu_latest ls /tmp      (to verify the command above)
+
+
+Suddenly, we started facing some issues with the static website on App Server 1. Look into the issue to fix the same, you can find more details below:
+Container's volume /usr/local/apache2/htdocs is mapped with the host's volume /var/www/html.
+The website should run on host port 8080 on App Server 1 i.e command curl http://localhost:8080/ should work on App Server 1.
+
+docker inspect container_ID          
+docker container start container_ID   (that can be fix)
+
+
+
+
+
 
 
