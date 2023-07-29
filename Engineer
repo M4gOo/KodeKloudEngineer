@@ -72,6 +72,8 @@ docker container start container_ID   (that can be fix)
 
 ====================== KUBERNETES =================
 
+Try using spaces and not tabs for your indentation. Use 2 spaces for each indentation. 
+
 kubectl get pods
 kubectl edit pod <pod name>
 kubectl run nginx --image=nginx --restart=Never
@@ -81,19 +83,51 @@ kubectl create deployment nginx --image=nginx
 kubectl create ns dev
 kubectl run dev-nginx-pod --image=nginx:latest -n dev
 
-
+the team wants to rollback the recent release
  kubectl rollout history deployment/nginx-deployment
+kubectl rollout undo deployment/nginx-deployment    
+
+
+ one of the team members has been assigned a task to write a template 
+Create a ReplicaSet using nginx image with latest tag only and remember to mention and name it as nginx-replicaset.
+Labels app should be nginx_app, labels type should be front-end. The container should be named as nginx-container; also make sure replicas counts are 4.
+
+apiVersion: apps/v1
+kind: ReplicaSet
+metadata:
+  name: nginx-replicaset
+  labels:
+    app: nginx_app
+    type: front-end
+spec:
+  # modify replicas according to your case
+  replicas: 4
+  selector:
+    matchLabels:
+      type: front-end
+  template:
+    metadata:
+      labels:
+        type: front-end
+    spec:
+      containers:
+      - name: nginx-container
+        image: nginx:latest
 
 
 
+DevOps team is working on developing some scripts that will be executed on different schedules, 
+but for the time being the team is creating some cron jobs in Kubernetes cluster with some dummy commands (which will be replaced by original scripts later)
 
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+...
 
+kubectl get cronjob
+kubectl get cj
 
-
-
-
-
-
+They might come up with some real scripts/commands to use, but for now they are preparing the templates and testing the jobs with dummy commands. 
 
 
 
