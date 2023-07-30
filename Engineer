@@ -74,6 +74,8 @@ docker container start container_ID   (that can be fix)
 
 Try using spaces and not tabs for your indentation. Use 2 spaces for each indentation. 
 
+Troubleshooting / DEBBUG - kubectl describe po <pod-name>
+
 kubectl get pods
 kubectl edit pod <pod name>
 kubectl run nginx --image=nginx --restart=Never
@@ -196,9 +198,106 @@ spec:
 
  
 
+DevOps team wants to create a ReplicationController to deploy several pods. They are going to deploy applications on these pods, these applications need highly available infrastructure.
+Create a ReplicationController using nginx image, preferably with latest tag, and name it as nginx-replicationcontroller.
+Labels app should be nginx_app, and labels type should be front-end. The container should be named as nginx-container and also make sure replica counts are 3.
+
+apiVersion: v1
+kind: ReplicationController
+metadata:
+  name: nginx-replicationcontroller
+spec:
+  replicas: 3
+  selector:
+    app: nginx_app
+  template:
+    metadata:
+      name: nginx
+      labels:
+        app: nginx_app
+        type: front-end
+    spec:
+      containers:
+      - name: nginx-container
+        image: nginx:latest
+        ports:
+        - containerPort: 80
 
 
 
+We deployed a Nginx and PHP-FPM based setup on Kubernetes cluster last week and it had been working fine so far. This morning one of the team members made a change somewhere which caused some issues, and it stopped working. Please look into the issue and fix it:
+The pod name is nginx-phpfpm and configmap name is nginx-config. Figure out the issue and fix the same.
+Once issue is fixed, copy /home/thor/index.php file from the jump host to the nginx-container under nginx document root and you should be able to access the website using Website button on top bar.
+
+kubectl describe cm nginx-config
+events {
+}
+http {
+  server {
+    listen 8099 default_server;
+    listen [::]:8099 default_server;
+
+# Set nginx to serve files from the shared volume!
+    root /var/www/html;
+
+
+check the port in the pod, also the volume mount is wrong (volume is wrong under container php-fpm-container). They dont have it, so add under spec,container (make sure is the container nginx-container)
+
+ports:
+    - containerPort: 8099
+
+change the volume mount as well (volume is wrong under container php-fpm-container)
+container mounted shared volume path to /var/www/html
+
+apply the changes to the pod (create new yaml ( kubectl get pod nginx-phpfpm -o yaml >  pod.yml) and delete the old pods or use kubectl edit po <pod-name>)
+
+
+then check the root volume, I found in the cm and also in the pods
+# Set nginx to serve files from the shared volume!
+    root /var/www/html;
+
+
+execute the command
+kubectl cp /home/thor/index.php nginx-phpfpm:/var/www/html -c nginx-container
+
+check in the pod
+kubectl exec nginx-phpfpm -c php-fpm-container -- ls /var/www/html      
+index.php
+
+
+
+
+=========================================   ANSIBLE ===========================================
+
+
+
+
+One of the Nautilus DevOps team members was working on to test an Ansible playbook on jump host. However, he was only able to create the inventory.
+Note: Validation will try to run the playbook using command ansible-playbook -i inventory playbook.yml
+
+thor@jump_host ~/ansible$ ls -al inventory 
+-rw-r--r-- 1 thor thor 54 Jul 30 12:30 inventory
+
+file /home/thor/ansible/inventory seems to be having some issues, please fix them. The playbook needs to be run on App Server 3 in Stratos DC, so inventory file needs to be updated accordingly.
+Create a playbook /home/thor/ansible/playbook.yml and add a task to create an empty file /tmp/file.txt on App Server 3
+
+vi /home/thor/ansible/inventory
+stapp02 ansible_host=172.238.16.204 ansible_user=steve
+
+after changes
+stapp03 ansible_host=172.16.238.12 ansible_user=banner
+
+#### Create a playbook /home/thor/ansible/playbook.yml
+- name: Create a file in app03
+  hosts: stapp03
+  become: yes
+  tasks:
+   - name: Create an empty file
+     ansible.builtin.file:
+      path: /tmp/file.txt
+      state: touch
+
+ansible-playbook -i inventory playbook.yml
 
 
 
