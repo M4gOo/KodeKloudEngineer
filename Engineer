@@ -284,13 +284,12 @@ Create a playbook /home/thor/ansible/playbook.yml and add a task to create an em
 vi /home/thor/ansible/inventory
 stapp02 ansible_host=172.238.16.204 ansible_user=steve
 
-after changes
-stapp03 ansible_host=172.16.238.12 ansible_user=banner
+after changes (need to add the password, otherwise it wont work - this is not a good practice)
+stapp03 ansible_host=172.16.238.12 ansible_user=banner ansible_ssh_pass=BigGr33n
 
 #### Create a playbook /home/thor/ansible/playbook.yml
 - name: Create a file in app03
   hosts: stapp03
-  become: yes
   tasks:
    - name: Create an empty file
      ansible.builtin.file:
