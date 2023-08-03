@@ -1,1 +1,93 @@
-dsd
+
+======================Ansible Basic Playbook =====================================
+
+One of the Nautilus DevOps team members was working on to test an Ansible playbook on jump host. However, he was only able to create the inventory.
+Note: Validation will try to run the playbook using command ansible-playbook -i inventory playbook.yml
+
+thor@jump_host ~/ansible$ ls -al inventory 
+-rw-r--r-- 1 thor thor 54 Jul 30 12:30 inventory
+
+file /home/thor/ansible/inventory seems to be having some issues, please fix them. The playbook needs to be run on App Server 3 in Stratos DC, so inventory file needs to be updated accordingly.
+Create a playbook /home/thor/ansible/playbook.yml and add a task to create an empty file /tmp/file.txt on App Server 3
+
+vi /home/thor/ansible/inventory      (This file was already there)
+stapp02 ansible_host=172.238.16.204 ansible_user=steve
+
+after changes (need to add the password, otherwise it wont work - this is not a good practice)
+stapp03 ansible_host=172.16.238.12 ansible_user=banner ansible_ssh_pass=xxxx
+
+#### Create a playbook /home/thor/ansible/playbook.yml
+- name: Create a file in app03
+  hosts: stapp03
+  tasks:
+   - name: Create an empty file
+     ansible.builtin.file:
+      path: /tmp/file.txt
+      state: touch
+
+ansible-playbook -i inventory playbook.yml
+
+
+
+=============================Ansible Inventory Update=========================================
+
+DevOps team has started testing their Ansible playbooks on different servers within the stack.
+some playbooks under /home/thor/playbook/
+now they want to test them on app server 3 in Stratos DC. However, they first need to create an inventory file so that Ansible can connect to the respective app
+
+Create an ini type Ansible inventory file /home/thor/playbook/inventory on jump host    (GOOD PRACTICE TO USE .INI), but can be anything. In this case I used without .ini
+stapp03 ansible_host=172.16.238.12 ansible_user=banner ansible_ssh_pass=xxxx
+
+thor@jump_host ~/playbook$ ls
+ansible.cfg  inventory  playbook.yml
+
+
+
+========================== Ansible Config File Update ================================================ /etc/ansible/ansible.cfg
+
+To manage all servers within the stack using Ansible, the Nautilus DevOps team is planning to use a common sudo user among all servers. 
+Ansible will be able to use this to perform different tasks on each server
+
+on jump host make appropriate changes so that Ansible can use mariyam as a default ssh user for all hosts. Make changes in Ansible's default configuration only
+
+vi /etc/ansible/ansible.cfg
+...
+# default user to use for playbooks if user is not specified
+# (/usr/bin/ansible will use current user as default)
+#remote_user = root    (CHANGE HERE)   
+...
+
+# default user to use for playbooks if user is not specified
+# (/usr/bin/ansible will use current user as default)
+remote_user = mariyam
+
+
+
+================= Ansible Copy Module ==================================================
+
+There is data on jump host that needs to be copied on all application servers in Stratos DC
+
+On jump host create an inventory file /home/thor/ansible/inventory and add all application servers as managed nodes.
+stapp01 ansible_host=172.16.238.10 ansible_user=tony ansible_ssh_pass=xxxx
+stapp02 ansible_host=172.16.238.11 ansible_user=steve ansible_ssh_pass=xx
+stapp03 ansible_host=172.16.238.12 ansible_user=banner ansible_ssh_pass=xxx
+
+On jump host create a playbook /home/thor/ansible/playbook.yml to copy /usr/src/devops/index.html file to all application servers at location /opt/devops
+
+(THIS GIVES ME AN ERROR!!!!)
+- name: Copy file on jump host to all app servers 
+  hosts: all
+  ansible.builtin.copy:
+    src: /usr/src/devops/index.html
+    dest: /opt/devops
+
+(DO THIS!!!)
+- name: Copy file on jump host to all app servers
+  hosts: all
+  tasks:
+  - name: copy index.html to /opt/security 
+    copy: src=/usr/src/security/index.html dest=/opt/security
+
+stapp01 ansible_host=172.16.238.10 ansible_user=tony ansible_ssh_pass=Ir0nM@n
+stapp02 ansible_host=172.16.238.11 ansible_user=steve ansible_ssh_pass=Am3ric@
+stapp03 ansible_host=172.16.238.12 ansible_user=banner ansible_ssh_pass=BigGr33n
