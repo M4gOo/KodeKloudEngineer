@@ -1,0 +1,79 @@
+hypertext transfer protocol
+
+protocolo principal de comunicação entre computadores utilizados na internet
+
+O que acontece quando acessamos um site
+
+http um protocolo na camada de aplicação ou seja deve ser implementado nos softwares responsáveis
+por essa comunicação como nos navegadores e servidores web 
+
+ele sempre estará trabalhando em conjunto com mais outros dois protocolos o tcp (responsável pela transferência das
+informações) e o ip (cuida do encaminhamento dos dados) - modelo tcp/ip
+
+essa comunicação realizada pelo http segue um modelo de request e response
+
+quando você abre o navegador para acessar um site está requisitando informações do servidor que por sua vez
+ao receber esse pedido fará os devidos processos internos e devolver a uma resposta
+essa resposta geralmente é um conteúdo em html que será interpretado pelo navegador gerando o conteúdo do site acessado
+
+após esse processo de pedido do navegador e resposta do servidor a conexão é encerrada sendo necessário
+repetir todo o ciclo cada vez que um novo pedido eh solicitado, isso quer dizer que a conexão não é persistente
+a cada acesso ou atualização do conteúdo
+Advantages of Non-Persistent Connection
+Wastage of Resources is very less because the connection opens only when there is some data to be sent. Non-Persistent Connection is more secure because after sending the data, 
+the connection gets terminated and nothing can be shared thereafter
+
+o http não é usado apenas através do navegador, aplicativos de celular ele esta presente (maioria dos apps se comunica com o back end atraves desse protocol http)
+
+essa comunicação entre cliente e servidor é realizada em formato de texto com um padrão bem definido
+
+--------------------REQUEST ----------------------------------------
+Tudo comeca pelo request, pedido feito ao servidor, este eh formado pelo
+- linha de pedido
+    - identificador de metodo (tipo de acao que vc vai esperar do servidor), existem 8 metodos (POST, GET, PUT, PATCH, and DELETE. These correspond to create, read, update, and delete (or CRUD) operations, respectively.)
+    - URI do recurso - endereco no qual sera enviado o pedido (eh aquele /index.php) . A URI is a sequence of characters that identifies a web resource by location, name, or both available on the internet
+    - versao do protocolo - (http 0.9, 1.0, 1.1, 2.0)
+- cabecalho(headers) - este eh um local para passar informacoes adicionais sobre a requisicao. O servidor pode responder de maneira diferente dependendo dos campos e valores contidos nele. 
+    - cabecalho geral
+    - cabecalho de requisicao
+    - cabecalho de entidade
+- corpo/mensagem
+
+GET /hello.txt HTTP/1.1
+User-Agent: curl/7.64.1
+Host: www.example.com
+Accept-Language: en, mi
+
+Examples of headers. Eles sao bem autoexplicativos
+POST / HTTP/1.1
+Host: localhost:8000
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.9; rv:50.0) Gecko/20100101 Firefox/50.0    (envia informacoes sobre o client (navegador)) O client eh livre para enviar qualquer tipo de info no header
+Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8     (preferencia de resposta)
+Accept-Language: en-US,en;q=0.5
+Accept-Encoding: gzip, deflate
+Connection: keep-alive
+Upgrade-Insecure-Requests: 1
+Content-Type: multipart/form-data; boundary=---------------------------8721656041911415653955004498
+Content-Length: 465
+Cache-control (
+
+-----------------------RESPONSE----------------------------
+-formado pela linha de status
+   -versao do protocolo utilizado no servidor
+    - codigo numerico do status (corresponde como nosso pedido foi processado pelo servidor). Primeiro digito eh qual categoria pertence. A utilizacao correta dos codigos eh de obrigado do DEV 
+        1xx - pedido foi recebido e ainda esta sendo processado
+        2xx - pedido recebido com sucesso e processado
+        3xx - acoes adicionais precisam ser realizadas para completar seu pedido
+        4xx - client error - pedido esta com info incorretas ou nao pode ser processado
+        5xx - server error - servidor nao conseguiu processar seu pedido
+    - texto associado ao status
+-headers (bem parecido com o headers do request)
+-corpo - geralmente eh um html que o navegador vai interpretar
+
+example
+HTTP/1.1 404 Not Found
+Date: Sun, 18 Oct 2012 10:36:20 GMT
+Server: Apache/2.2.14 (Win32)
+Content-Length: 230
+Connection: Closed
+Content-Type: text/html; charset=iso-8859-1
