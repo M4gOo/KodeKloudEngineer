@@ -1,0 +1,18 @@
+Domain Name System
+
+Translate domain names into IPs
+
+A
+Os mais comuns e vinculam os domínios e subdomínios dos sites a IPv4 para facilitar o acesso a sites.
+
+AAAA
+Esse tipo de DNS executa as mesmas funções do tipo A, porém com endereços IPv6.
+
+CNAME
+Direciona um endereço para outro. Dessa forma, o site www.example.com.br também pode ser acessado quando alguém digita apenas minhaempresa.com.br, por exemplo.
+
+MX
+Esse servidor é específico para e-mails. Quando enviamos um email, o DNS busco por um registro MX para saber qual eh o IP do servidor de email daquele dominio
+
+TXT
+O TXT (registro de texto) fornece informações textuais que podem ser utilizadas para associar um texto arbitrário a um host, como informações sobre um servidor, rede etc. Você pode usa-lo afim de impedir spams e ataques phising.
