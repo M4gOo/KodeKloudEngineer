@@ -1,0 +1,8 @@
+CI (continuous integration) is the practice of integrating code changes into a repository multiple times a day.
+
+CD has two meanings: (continuous delivery / deployment)
+continuous delivery automates code integrations.
+continuous deployment automatically releases final builds to end users. 
+
+CI/CD testing reduces errors and code defects, making it essential for every DevOps workflow
+
