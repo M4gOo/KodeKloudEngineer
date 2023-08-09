@@ -50,6 +50,16 @@ This avoid problem like one user insert number and another a text as a content i
 varchar - 'something' . We can specify the number of characters varchar(100)
 int - 4398
 
+========================== NULL columm ====================
+means is that the null value is permitted in this particular column in name and in age, for example
+
+NULL is a value in my SQL that means no value. It represents the lack of a value for a given row. It basically means if we see null set to yes, that name can be empty for a row or age can be empty,
+or in fact both could be missing entirely.
+
+it's really important to know this is different than something like zero.
+Zero is a number. It is a value.
+NULL means that there is no information, there is no value at all.
+
 
 
 
