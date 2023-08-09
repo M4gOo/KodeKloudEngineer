@@ -1,4 +1,8 @@
 CI (continuous integration) is the practice of integrating code changes into a repository multiple times a day.
+important to commit once a day minimum, to avoid inconsistency in the code
+important you have version control - Git
+automate build when new version is created
+self-test building
 
 CD has two meanings: (continuous delivery / deployment)
 continuous delivery automates code integrations.
