@@ -1,0 +1,57 @@
+The command in mysql don't need to be in capital, but it is a good practice.
+
+mysql -u root -p
+
+######### make comments use
+
+-- this is a comment 
+
+#####To show all databases in the server mysql 
+
+show databases;
+
+####The general command for creating a database
+
+CREATE DATABASE <database_name>;
+
+########To drop a database. This will remove the database and also the content
+
+DROP DATABASE <database-name>;
+
+#########To use a database:
+
+USE <database-name>;
+   
+###this check which database you are
+SELECT database(); 
+
+###### create a table
+CREATE TABLE tablename
+  (
+      column_name data_type,
+      column_name data_type
+  );
+
+CREATE TABLE dogs
+  (
+      name VARCHAR(100),
+      age INT
+  );
+
+
+########### look at the tables inside the database
+
+SHOW TABLES;
+
+############  show the columns inside a table
+
+SHOW COLUMNS FROM <tablename>;
+
+OR
+
+DESC <tablename>;
+
+########### To drop a table. This will remove the table and also the content
+
+DROP TABLE <table-name>;
+
