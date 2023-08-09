@@ -39,4 +39,17 @@ sudo ss -tap | grep mysql
 
 we can have multiple databases within a MySQL database server.
 
+A database (RELATIONAL) is really just a bunch of tables.
+Tables are what we need to put in those databases so that we can hold data.
+They describe the format and the shape of our data, and then they hold collections of data that follows that shape.
+
+tables are data types
+we define the structure of a table, we're not only saying what column names we want, but we also specify the types, what type of information is permitted in each column. 
+This avoid problem like one user insert number and another a text as a content in a column, this might cause some problem 
+
+varchar - 'something' . We can specify the number of characters varchar(100)
+int - 4398
+
+
+
 
