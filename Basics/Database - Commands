@@ -2,28 +2,35 @@ The command in mysql don't need to be in capital, but it is a good practice.
 
 mysql -u root -p
 
+
 ######### make comments use
 
 -- this is a comment 
+
 
 #####To show all databases in the server mysql 
 
 show databases;
 
+
 ####The general command for creating a database
 
 CREATE DATABASE <database_name>;
+
 
 ########To drop a database. This will remove the database and also the content
 
 DROP DATABASE <database-name>;
 
+
 #########To use a database:
 
 USE <database-name>;
-   
+
+
 ###this check which database you are
 SELECT database(); 
+
 
 ###### create a table
 CREATE TABLE tablename
@@ -43,6 +50,7 @@ CREATE TABLE dogs
 
 SHOW TABLES;
 
+
 ############  show the columns inside a table
 
 SHOW COLUMNS FROM <tablename>;
@@ -51,7 +59,41 @@ OR
 
 DESC <tablename>;
 
+
 ########### To drop a table. This will remove the table and also the content
 
 DROP TABLE <table-name>;
 
+
+######### add statements into the table. THE ORDER MATTERS!!!
+
+INSERT INTO <table-name> (name, age)    -> between () we specify the columns and what order it will be expected
+VALUES ('Jetson', 7);
+
+OR
+
+INSERT INTO <table-name> (name, age) VALUES ('Jetson', 7);            OR       INSERT INTO <table-name> (age, name) VALUES (7, 'Jetson');
+
+----- Multiple values
+
+ INSERT INTO <table-name> (age, name) VALUES (7, 'Jetson'), (5, 'Josh');
+
+----- When NULL is YES
+
+INSERT INTO <table-name> (name) VALUES ('Jetson');
+
+
+####### to check the data inside a table 
+
+SELECT * FROM <table-name>;
+
+* - means gives everything from the <table-name>
+
+
+###### NOT  NULL
+
+CREATE TABLE dogs
+  (
+      name VARCHAR(100) NOT NULL,
+      age INT NOT NULL
+  );
