@@ -1,0 +1,11 @@
+application program interface
+
+ API faz a ponte entre o sistema maior (FB, Correios) com o programa de terceiros (pode ser outro programador, outro sistema)
+
+API eh um mini sistema acessa o sistema maior
+
+Por exemplo eu tenho o sistema de correios. Eu permito que programadores criem funcionalidades novas para o meu sistema dos correios. Para que estes
+possam ter acesso, eu preciso criar um API
+Por exemplo eu preciso saber as dimensoes, peso do pacote, entao o que ocorre eh que o sistema
+do programador acessa o API, que este entao acesso o programa dos correios pega as informacoes
+necessarias e manda de volta para o programa do programador
