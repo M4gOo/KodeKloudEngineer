@@ -1,0 +1,31 @@
+what is database?
+-it's a collection of data 
+-contains a method for accessing and manipulating that data.
+
+For our application to be able to do things like update somebody's username in the database or edit their profile photo or delete a user, whatever it is, there's
+a database management system that allows us to interface with that database.
+
+when people talk about a database, you actually hear them referring to both of these things, the database management system and the database together just as a database.
+
+PostgreSQL, MySQL, Oracle SQL Light. They're not technically databases, they're actually database management systems.
+
+
+================================ SQL vc MySQL ======================================
+
+SQL which stands for Structured Query Language
+SQL is the language that we use when we talk to our databases.
+It's the way that we interact and access the data, update data, delete things and basically manipulate the data in our databases.
+MySQL is a DBMS
+
+====================================================================================
+
+what makes databases or database management systems, to be specific, what makes them unique are the features that they offer. Not the sequel or the language itself.
+you might write the same line of code to do the same thing.
+So what makes these different are the features that they implement, things like 
+how secure is one versus the other? 
+how how fast is it?
+How much?
+How big is the download?
+How do user permissions work?
+
+
