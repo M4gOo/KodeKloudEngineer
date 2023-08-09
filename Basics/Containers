@@ -1,0 +1,11 @@
+It is a type of virtualization, in a  OS level. You can run multi-system in one OS host
+
+Container can share the same Kernel of OS
+The idea is every container does one only thing
+
+groups of containers - cluster
+
+Hardware Infrastructure - OS - Docker
+
+Docker separate your applications from your infrastructure 
+Docker provides the ability to package and run an application in an isolated environment called a container. 
