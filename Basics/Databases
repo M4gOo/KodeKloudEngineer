@@ -28,4 +28,15 @@ How much?
 How big is the download?
 How do user permissions work?
 
+================================== install in linux (ubuntu)
+sudo apt install mysql-server
+sudo service mysql status
+
+The network status of the MySQL service 
+sudo ss -tap | grep mysql
+
+=============================================================
+
+we can have multiple databases within a MySQL database server.
+
 
