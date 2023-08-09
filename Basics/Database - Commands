@@ -1,4 +1,12 @@
-The command in mysql don't need to be in capital, but it is a good practice.
+- The command in mysql don't need to be in capital, but it is a good practice.
+- It's a good practice to always use single quotes (some SQL flavor will give an error for using doublew quotes) to wrap around whatever text we're providing 
+  when we're inserting or working with data. 
+- (in case you have a name like Italiano's pizza, use a backslash to escape that quote)
+  INSERT INTO shops(name) VALUES ('Italiano\'s pizza');
+
+
+
+####### accessing MySQL
 
 mysql -u root -p
 
@@ -90,10 +98,84 @@ SELECT * FROM <table-name>;
 * - means gives everything from the <table-name>
 
 
-###### NOT  NULL
+############## example of a table with null, key and default values
+
++-------------+-------------+------+-----+---------+----------------+
+| Field       | Type        | Null | Key | Default | Extra          |
++-------------+-------------+------+-----+---------+----------------+
+| Id          | int(11)     | NO   | PRI | NULL    | auto_increment |
+| UserName    | varchar(20) | YES  |     | NULL    |                |
+| UserAddress | varchar(20) | YES  |     |         |                |
++-------------+-------------+------+-----+---------+----------------+
+
+PRI - means primary
+
+###### NOT  NULL, even if you try to insert into it will give you an error
 
 CREATE TABLE dogs
   (
       name VARCHAR(100) NOT NULL,
       age INT NOT NULL
   );
+
+
+##### adding a DEFAULT value into the table
+
+CREATE TABLE dogs  
+  (    
+    name VARCHAR(20) DEFAULT 'no name provided',    
+    age INT DEFAULT 99  
+);
+
+
+##### combine NOT NULL and DEFAULT    -> need specify the NOT NULL, because it is possible to manually add NULL like INSERT INTO dogs (name, age) VALUES (NULL, 5);
+
+Combine NOT NULL and DEFAULT:
+
+CREATE TABLE dogs  (    
+    name VARCHAR(20) NOT NULL DEFAULT 'unnamed',    
+    age INT NOT NULL DEFAULT 99 
+);
+
+
+######## KEY VALUE into the table    -> primary keys cannot be null, once actived you need specify a value or have a auto_increment
+
+We add unique IDs to rows so that we can differentiate them even when all the other data looks the same.
+So this is something we'll do for almost every single table you ever make is add some form of a unique identifier.
+
+very simple just add a numeric ID that starts at one and then goes to two, three and four.
+we're going to declare our column, the ID column, the primary key (unique identifier) for this table.
+
+
+CREATE TABLE unique_dogs (
+	dog_id INT PRIMARY KEY,
+    name VARCHAR(100) NOT NULL,
+    age INT NOT NULL,
+   );
+
+
+            OR
+
+
+CREATE TABLE unique_cats2 (
+	cat_id INT,
+    name VARCHAR(100) NOT NULL,
+    age INT NOT NULL,
+    PRIMARY KEY (cat_id)
+);
+
+
+INSERT INTO unique_dogs (dog_id, name, age) VALUES (1, 'Spike', 7);
+
+------------ auto increment on your primary key fields. It will show in EXTRAS colummns on tables
+We'll have one and then two and then three and then four and we don't have to go and add anything.
+We don't have to manually insert and keep track of the unique IDs.
+
+
+CREATE TABLE unique_cats3 (
+    cat_id INT AUTO_INCREMENT,
+    name VARCHAR(100) NOT NULL,
+    age INT NOT NULL,
+    PRIMARY KEY (cat_id)
+);
+
