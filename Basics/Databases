@@ -61,5 +61,21 @@ Zero is a number. It is a value.
 NULL means that there is no information, there is no value at all.
 
 
+===========================  CRUD in MySQL ============================
+It stands for for things C, R, U, and D, create, read, update and delete.
+And they are the four basic actions that we want to be able to do to our data.
 
+We can create individual rows using insert
+
+R and CRUD, which is read. How do we retrieve or read data that's already in a table?
+We use select.
+
+where is not limited to working with select, we will be using where to make updates or to delete rows as well.
+
+We certainly insert and select more more often than updating
+Whether we have some website and restoring user information, a user changes their password or they
+change their username, or we alter some existing order, something in a shopping cart item to get added or removed.
+Things are dynamic. We use an update query.
+
+D for deletion, destroy. delete rows from a table in SQL, use delete from and then some table name.
 
