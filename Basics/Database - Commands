@@ -3,6 +3,8 @@
   when we're inserting or working with data. 
 - (in case you have a name like Italiano's pizza, use a backslash to escape that quote)
   INSERT INTO shops(name) VALUES ('Italiano\'s pizza');
+- to prevent any unexpected updates, select whatever you're trying to update before you actually perform the update.
+- to upload a file into mysql, open mysql in the terminal, choose or create a DB and then use the command source (source tables_file.sql) 
 
 
 
@@ -97,6 +99,9 @@ SELECT * FROM <table-name>;
 
 * - means gives everything from the <table-name>
 
+SELECT Username FROM <table-name>;
+
+SELECT Username, UserAddress FROM <table-name>;
 
 ############## example of a table with null, key and default values
 
@@ -179,3 +184,229 @@ CREATE TABLE unique_cats3 (
     PRIMARY KEY (cat_id)
 );
 
+
+
+####### using WHERE as a condition
+
++--------+----------------+------------+------+
+| cat_id | name           | breed      | age  |
++--------+----------------+------------+------+
+|      1 | Ringo          | Tabby      |    4 |
+|      2 | Cindy          | Maine Coon |   10 |
+|      3 | Dumbledore     | Maine Coon |   11 |
+|      4 | Egg            | Persian    |    4 |
+|      5 | Misty          | Tabby      |   13 |
+|      6 | George Michael | Ragdoll    |    9 |
+|      7 | Jackson        | Sphynx     |    7 |
++--------+----------------+------------+------+
+
+SELECT * FROM cats WHERE age = 4;
+
+SELECT * FROM cats WHERE name ='Egg';    (name is case insensitive, so you can use 'egg'. 'eGg', ...)
+
+SELECT cat_id, age FROM cats WHERE cat_id=age;
+
+
+############ Aliases  ---------- AS
+
+we can rename a column to make it shorter or easier to understand.
+it's not the same as renaming the column forever. It's just in our output result.
+
+SELECT cat_id AS id, name FROM cats;
+
++----+----------------+
+| id | name           |
++----+----------------+
+|  1 | Ringo          |
+|  2 | Cindy          |
+|  3 | Dumbledore     |
+|  4 | Egg            |
+|  5 | Misty          |
+|  6 | George Michael |
+|  7 | Jackson        |
++----+----------------+
+
+
+When we get into fancier things like joining data together or writing fancy select queries that are
+really complicated, we might have some resulting data that doesn't really have a name.
+We use the as keyword to give it a meaningful name.
+
+
+################## Update a table ---------- UPDATE  SET
+
+to prevent any unexpected updates, select whatever you're trying to update before you actually perform the update.
+
+UPDATE cats SET breed='Shorthair' WHERE breed='Tabby';
+
+UPDATE cats SET age=14 WHERE name='Misty';
+
+UPDATE cats SET age=12 WHERE breed='Maine Coon';
+
+UPDATE cats SET breed='British Shorthair' WHERE  name='Ringo';
+
+
+############ Delete rows  --------------  DELETE FROM 
+
+-- Delete all cats with name of 'Egg':
+DELETE FROM cats WHERE name='Egg';
+
+-- Delete all rows in the cats table:
+DELETE FROM cats;
+
+-- Delete all 4 year old cats:
+DELETE FROM cats WHERE age=4;
+
+-- Delete cats where cat_id is the same as their age:
+DELETE FROM cats WHERE cat_id=age;
+
+
+#################### CONCAT   and CONCAT_WS
+
+concatenating different pieces of text together from a table from different rows.
+
+CONCAT_WS
+width separator.
+We provide a separator and whatever that separator character is will be smushed between every other value.
+
+SELECT CONCAT('pi', 'ckle');
+ 
+SELECT CONCAT(author_fname,' ', author_lname) AS author_name FROM books;
+author_name
+Author Lastname
+ 
+SELECT CONCAT_WS('-',title, author_fname, author_lname) FROM books;
+Author-Lastname
+
+
+#####################   SUBSTRING
+
+SELECT SUBSTRING('Hello World', 1, 4);
++--------------------------------+
+| SUBSTRING('Hello World', 1, 4) |
++--------------------------------+
+| Hell                           |
++--------------------------------+
+
+
+#################   Combining String Functions
+
+SELECT CONCAT
+         (
+             SUBSTRING(title, 1, 10),
+             '...'
+         ) AS 'short title'
+     FROM books;
++---------------+
+| short title   |
++---------------+
+| The Namesa... |
+| Norse Myth... |
+| American G... |
+| Interprete... |
+| A Hologram... |
+| The Circle... |
+| The Amazin... |
+| Just Kids...  |
+| A Heartbre... |
+| Coraline...   |
+| What We Ta... |
+| Where I'm ... |
+| White Nois... |
+| Cannery Ro... |
+| Oblivion: ... |
+| Consider t... |
++---------------+
+
+ 
+SELECT SUBSTRING('Hello World', 7);
++-----------------------------+
+| SUBSTRING('Hello World', 7) |
++-----------------------------+
+| World                       |
++-----------------------------+
+ 
+SELECT SUBSTRING('Hello World', -3);
++------------------------------+
+| SUBSTRING('Hello World', -3) |
++------------------------------+
+| rld                          |
++------------------------------+
+ 
+SELECT SUBSTRING(title, 1, 10) AS 'short title' FROM books;      OR     SELECT SUBSTR(title, 1, 10) AS 'short title' FROM books;
+ +-------------+
+| short title |
++-------------+
+| The Namesa  |
+| Norse Myth  |
+| American G  |
+| Interprete  |
+| A Hologram  |
+| The Circle  |
+| The Amazin  |
+| Just Kids   |
+| A Heartbre  |
+| Coraline    |
+| What We Ta  |
+| Where I'm   |
+| White Nois  |
+| Cannery Ro  |
+| Oblivion:   |
+| Consider t  |
++-------------+
+
+
+#######################  REPLACE   
+replace allows us to replace portions of a string with some other replacement string. But the table will remain the same just the output will have the replaces.
+
+REPLACE(string, from_string, new_string)
+
+SELECT REPLACE('cheese bread coffee milk', ' ', ' and ');
++---------------------------------------------------+
+| REPLACE('cheese bread coffee milk', ' ', ' and ') |
++---------------------------------------------------+
+| cheese and bread and coffee and milk              |
++---------------------------------------------------+
+
+SELECT REPLACE(title, 'e ', '3') FROM books;
+ +---------------------------------------------------+
+| REPLACE(title, 'e ', '3')                         |
++---------------------------------------------------+
+| Th3Namesake                                       |
+| Nors3Mythology                                    |
+| American Gods                                     |
+| Interpreter of Maladies                           |
+| A Hologram for th3King: A Novel                   |
+| Th3Circle                                         |
+| Th3Amazing Adventures of Kavalier & Clay          |
+| Just Kids                                         |
+| A Heartbreaking Work of Staggering Genius         |
+| Coraline                                          |
+| What W3Talk About When W3Talk About Love: Stories |
+| Wher3I'm Calling From: Selected Stories           |
+| Whit3Noise                                        |
+| Cannery Row                                       |
+| Oblivion: Stories                                 |
+| Consider th3Lobster                               |
++---------------------------------------------------+
+
+SELECT REPLACE(title, ' ', '-') FROM books;
++-----------------------------------------------------+
+| REPLACE(title, ' ', '-')                            |
++-----------------------------------------------------+
+| The-Namesake                                        |
+| Norse-Mythology                                     |
+| American-Gods                                       |
+| Interpreter-of-Maladies                             |
+| A-Hologram-for-the-King:-A-Novel                    |
+| The-Circle                                          |
+| The-Amazing-Adventures-of-Kavalier-&-Clay           |
+| Just-Kids                                           |
+| A-Heartbreaking-Work-of-Staggering-Genius           |
+| Coraline                                            |
+| What-We-Talk-About-When-We-Talk-About-Love:-Stories |
+| Where-I'm-Calling-From:-Selected-Stories            |
+| White-Noise                                         |
+| Cannery-Row                                         |
+| Oblivion:-Stories                                   |
+| Consider-the-Lobster                                |
++-----------------------------------------------------+
