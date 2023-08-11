@@ -1,0 +1,569 @@
+
+===================== In doubt
+
+If the apropos command does not work because your manual pages are not indexed
+Getting this message "nothing appropriate."
+#
+mandb
+#
+apropos "nfs mount"
+# 
+<command> help
+check manuals programs packages installed on the system /usr/share/doc
+
+
+
+==========================================        Manage Users and Groups     ======================================================
+
+
+Create, delete, and modify local user accounts ===========================================================================
+
+
+sudo useradd <username>
+it will automatically create user and group with the username, also a shell and a home dir
+sudo useradd --shell /bin/othershell --home-dir /home/otherdirectory/ john
+
+
+sudo adduser kareem -s /sbin/nologin    -> non-interactive shell
+a non-interactive shell is a type of shell that doesn't interact with the user. We can run it through a script or similar. Also, it can be run through some automated process.
+
+
+useradd -M <name>      ----> wihtout home dir
+
+useradd --defaults   OR  useradd -D
+
+another defaults configurations can be seen in
+cat /etc/login.defs
+
+setup a password
+sudo passwd <username>
+
+delete acc and group. Home dir it will remain
+sudo userdel <username>
+
+delete acc and the home dir
+sudo userdel --remove john   OR      sudo userdel -r john
+
+delete a groupd
+sudo groupdel <groupname>
+
+to choose id for the user
+sudo useradd --uid 1100 <username>
+
+to check the id numbers and home dir
+ls -ln /home
+
+id
+check group, userid and so on
+
+create system account
+sudo useradd --system <systemname>
+those numbers are smaller than 1000
+usually daemon use system accs
+
+with want to change conf after create user
+sudo usermod --home /home/otherdir --move-home john   OR    sudo usermod -d /home/otherdir -n john
+sudo usermod --login <new_username> <old_username>    OR    sudo usermod -l <new_username> <old_username>
+sudo usermod --shell /home/otherdir <username>        OR    sudo usermod -s /home/otherdir <username>
+
+disable the acc. Lock the user account
+sudo usermod --lock <username>    OR sudo usermod -L <username>       
+username cannot login even using the password, but can login using ssh if was set up before lock
+to avoid that set up a expire date
+sudo usermod --expiredate 2020-12-20 <username>     if you want to set up now, just choose a date in the past
+to remove expiry date 
+sudo usermod --expiredate "" <username> 
+
+password for all new users in domain.com should expire after 20 days
+vi /etc/login.defs
+PASS_MAX_DAYS 20
+
+check the user acc regarding expiration
+#
+sudo chage -l <username>
+
+to easy calculate
+date -d +15days
+
+to set up an expiration date for password. This command set expired password and the user are force to immediately change it the next time logs in
+sudo chage --lastday 0 <username>
+
+to cancel expiration date for password
+sudo chage --lastday -1 <username>
+
+to set up a date for user change the password
+sudo chage --maxdays 30 <username>
+
+set up for password never expiry
+sudo chage --maxdays -1 <username>
+
+to see the list for password expires
+sudo chage --list <username>
+
+User gets a warning at least 2 days before the password expires
+sudo chage -W 2 <username>
+
+
+Create, delete, and modify local groups and group memberships ===========================================================================
+
+sudo groupadd developers
+
+add user to a group
+sudo gpasswd --add <usrname> <developers>
+
+to see which group the user belongs to
+groups <username>
+
+delete a user to a group
+sudo gpasswd --delete <username> <developers>
+
+change the primary group of the user
+sudo usermod -g <developers> <username>     OR   sudo usermod --gid <developers> <username>
+the capital G flag is to change the secondary group
+
+group named cricket and set its GID to 9875
+sudo groupadd -g 9875 cricket 
+
+to rename the group
+sudo groupmod --new-name <nem_name> <old_name>
+
+to delete a grooup
+sudo groupdel <groupname>
+
+
+Manage access to the root account  ==========================================================================================================
+
+login as a root, when the user has sudo priv
+sudo --login   OR  sudo -i
+
+when the user doesnt have sudo priv, but knows root password
+su -  
+
+some system they have root locked, means we cannot login with root acc only with the password
+we can login using sudo -i, but not su -
+also can login using ssh private key
+
+to unlock use
+sudo passwd root   OR   sudo passwd --unlock root
+
+to lock root acc, avoid using password
+sudo passwd --lock root
+
+change the root password
+sudo passwd
+
+disable root login - ssh
+cat /etc/ssh/sshd_config  | grep PermitRoot
+PermitRootLogin no
+# the setting of "PermitRootLogin without-password".
+sudo systemctl restart sshd
+
+
+CHMOD   =================================================
+
+----------------------------- setuid,setgid,stickybit
+[S ; s (with x)] SETUID -  makes an executable run with the privileges of the owner of the file.  
+[S ; s (with x)]SETGID -  makes an executable run with the privileges of the group of the file.
+[T ; t (with x)] STICKY BIT - This permission does not affect individual files. At the directory level, it restricts file deletion. 
+                              Only the owner (and root) of a file can remove the file within that directory.
+4 - r
+2 - w
+1 - x
+
+u - user (owner)
+g - group
+o - other 
+a - all (u, g, and o)
+ 
+sudo chmod g+s     ensure that for all future files within /directory the group owner will be the same as set in /directory
+sudo chmod g+rw
+sudo chmod u-w
+chmod go+rw 
+ 
+ setuid Command will be run with owner rights instead of the rights of the executer
+ chmod u+s /root
+ set gid ensure that for all future files within /directory the group owner will be the same as set in /directory
+ sudo chmod g+s
+
+
+ACL =======================================
+
+
+ ACLs (Access Control Lists) defines specific permissions for two or more users/groups
+ 
+ sudo setfacl --modify user:<username>:rw file.txt
+ sudo setfacl -m group:Mac:--- /var/fstab             group Mac wont have any permissions
+ 
+ when you use the command ls -l will see a + mark at the end
+ to check tha acl in the file
+ getfacl file.txt                                             the output shows the mask, which means the maximum permission we can get in that file
+ 
+ sudo setfacl --modify mask:r file.txt                                  to set/change a mask
+ sudo setfacl --remove user/group:<username/groupname> file.txt         to remove acl group/user
+ sudo setfacl --recursive -m user:<username>:rw dir/                    to set ucl dir and subdir/files as well
+ sudo setfacl --recursive --remove user:<username> dir/                 to remove ucl dir and subdir/files as well
+
+
+set permissions for user which all new creating files will be -r-------- and dir dr-x------ as default permission
+vi .bash_profile
+#after fi type
+umask 277
+
+
+SED =====================================================
+
+  
+  sed 's/old_string/new_string/g' file.txt
+  s -> substitute
+  g -> global replace
+  
+  sed -i 's/old_string/new_string/g' file.txt
+  -i -> will edit the file, it will swap the strings
+  
+  sed -i 's/disabled/enabled/gi'
+  gi - ignore case sensitive. For example, any string like disabled, DISABLED, Disabled
+  
+  
+  Change all values enabled to disabled only from line number 500 to 2000.
+  
+  sed -i '500,2000s/enabled/disabled/g' file
+  
+  Replace all occurrence of string #%$2jh//238720//31223 with $2//23872031223 i
+  
+  sed -i 's~#%$2jh//238720//31223~$2//23872031223~g' file
+
+
+LAST ==================================================
+
+to see who is logged in the system
+last     
+lastlog  (ssh will see an IP addr)
+
+
+============================================================================== Locate and analyze system log files 
+
+
+make journalctl persistent
+sudo mkdir /var/log/journal
+Edit the file /etc/systemd/journald.conf
+[Journal]
+Storage=persistent
+Next, restart the systemd-journald
+systemctl restart systemd-journald
+journalctl --flush
+
+log daemon rsyslog is the popular in Linux that stores all logs in /var/log
+
+ls /var/log/
+
+grep -r 'ssh' /var/log/
+
+system logs
+/var/log/messages
+/var/log/
+
+tail -F /var/log/secure   (you can watch the log waiting for inputs; liveview)
+
+journalctl              ( > you can use to navigate)
+journalctl /bin/sudo
+journalctl -u sshd.service
+journalctl -e                 (go to end to the journalctl)
+journalctl -F                 (liveview)
+journalctl -p err             (use journalctl -p to list those using 2 TAB -> (err, alert, crit, debug, emerge, info, notice, warning, ...))
+journalctl -S 02:00                     -S for specify time
+journalctl -S 01:00 -U 02:00            logs started in 01:00 to 02:00
+journalctl -S  '2021-11-16 12:04:55'
+sudo journalctl -p info -g '^c'               Analyse the info priority logs through journalctl that begin with letter c
+journalctl logs are reset after reboot/power off, to save create /var/log/journal/
+
+
+SCP =====================================
+
+ sudo scp /tmp/file.txt.gpg  bob@server2:/tmp/
+
+
+CRONJOB - CRONTAB =====================================
+
+sudo dnf -y install cronie
+
+systemctl status crond
+
+verify cronjob
+do something with 2min to check 
+
+cat /etc/crontab 
+  can use  ',' this it will run multiple times like 15min and 45minutes -> 15,45
+  can use '-', set hours to 2-4 2am,3am,4am
+  can use '/', to specifies steps, every 4hours it will run. */3 * * * * ->execute every 3min
+  Minute(0-59) Hour(0-23) Day_of_month(1-31) Month(1-12) Day_of_week(0-6) [Sunday=0 or 7] or sun,mon,tue,wed,thu,fri,sat
+  
+check the service is running in the machine
+service cron status
+service cron start
+
+crontab -e 
+  edit the table of your current user
+  
+crontab -l   - to see user logged in cronjobs
+
+to edit as sudo just add sudo at the front
+sudo crontab -l       list
+sudo crontab -e       edit
+30 21 * * * /usr/bin/touch test_passed
+
+to add with different user
+sudo crontab -e -u <username>
+
+to remove cronjob
+crontab -r
+sudo crontab -r -u <username>
+
+to run a sheel script in a cronjob dont add extension
+makes executable
+sudo chmod +rx /etc/cron.hourly/shellscript
+if want run hourly (/etc/cron.hourly) just move to this dir, using sudo 
+
+check the logs
+sudo cat /var/log/cron
+
+to send an email to user change the MAILTO=root
+
+to deny user to do cronjob
+/etc/cron.deny      #ype the name user in the file and save
+to verify login with the user and try to use the command crontab -e
+
+
+
+Run Levels ===================================================
+
+
+system's current default boot target can be basic.target, graphical.target , etc
+
+to check our default boot
+systemcl get-default
+graphical.target
+
+#
+systemctl get-default
+systemctl set-default
+ls -l /usr/lib/systemd/system/
+
+sudo systemctl set-default multi-user.target  
+sudo systemctl isolate graphical.target  (temporary gives a graphical prompt, after reboot back to the default you set to boot)
+sudo systemctl isolate emergency.target   (for troubleshooting, read permissions, few system are loaded). You must have root password
+sudo systemctl isolate rescue.target      (root permission, there will be more programs than emergency). You must have root password
+
+systemd targets
+Targets in systemd act as synchronization points during the start of your system.
+The purpose of target units is to group together various systemd units through a chain of dependencies.
+The graphical.target unit for starting a graphical session, starts system services such as the GNOME Display Manager 
+(gdm.service) or Accounts Service (accounts-daemon.service), 
+and also activates the multi-user.target unit.
+
+basic
+unit target covering basic boot-up
+
+rescue
+unit target that pulls in the base system and spawns a rescue shell
+
+multi-user
+unit target for setting up a multi-user system
+
+graphical
+unit target for setting up a graphical login screen
+
+emergency
+unit target that starts an emergency shell on the main console. provides the most minimal environment possible and allows you to repair your system even 
+in situations when the system is unable to enter rescue mode. In emergency mode, the system mounts the root file system only for reading, 
+does not attempt to mount any other local file systems, does not activate network interfaces, and only starts a few essential services.
+
+sysinit
+unit target that pulls in the services required for system initialization
+
+
+
+timedatectl ===================================================
+
+
+timedatectl set-timezone America/California
+
+Configure time service clients  - NTP (Network Time Protocol)------------------
+
+sudo yum install chrony
+sudo vi /etc/chrony.conf    server <ip> iburst    and comment  #pool 2.centos.pool.ntp.org iburst
+systemctl restart chronyd
+chronyc sources -v  
+sudo systemctl set-ntp true
+
+keep the clock accurate
+chrony daemon 
+
+to see it is enable
+systemctl status chronyd.service
+
+run this command to check the system clock is synchronized
+timedatectl
+
+timedatectl list-timezones 
+timedatectl list-timezones | grep America 
+
+if is not enable by default first check if the time zone is set correctly
+sudo timedatectl set-timezone America/New_York          to see all available zones timedatectl list-timezones
+sudo dnf install chrony
+sudo sysstemctl start chronyd.service
+sudo sysstemctl enable chronyd.service
+then check the ntp is enable and system clock is synch using the command
+timedatectl
+in case is not enable
+sudo systemctl set-ntp true
+ 
+
+Using timedatectl configure RTC (real-time clock) to maintain the RTC in local time.
+RTC is a battery-powered computer clock that keeps track of the time even when the system is turned off.
+sudo timedatectl set-local-rtc 1
+
+NTP ---------------------------------------------  Linux NTP Setup
+ chrony is an implementation of the Network Time Protocol (NTP)   
+
+ sudo yum install ntp 
+ 
+ chrony consists of chronyd, a daemon that runs in user space
+ chronyc a command line program which can be used to monitor the performance of chronyd and to change various operating parameters when it is running.
+ 
+ system synchronous as 172.24.40.10
+  
+ dnf install chrony
+ 
+ Changes made using chronyc are not permanent, they will be lost after a chronyd restart. 
+ For permanent changes, modify /etc/chrony.conf
+ 
+ server ntp.lab.int_OR_IP iburst
+ 
+ After applying the configuration changes, restart the chronyd service
+ 
+ chronyc sources -v    displays information about the current time sources
+ 
+ timedatectl
+ timedatectl set-ntp true
+ 
+ 
+ configure server need to add the ip
+ server ntp.lab.int iburst
+allow 192.168.0.0/24
+
+and add entries in the firewall
+sudo firewall-cmd --add-service=ntp --permanent
+sudo firewall-cmd --reload
+
+
+firewalld========================================================
+
+block accessing your system from 184.25.0.0/24
+
+ firewall-cmd --permanent --add-source=184.25.0.0/24 --zone=block
+ firewall-cmd --reload
+ firewall-cmg --zone=block --list-all      #verify firewall rule
+
+sudo firewall-cmd --permanent --add-service nfs
+sudo firewall-cmd --reload
+
+with a firewall added to the system will filter out what network packets are allowed to come into our system and even what network packets are 
+allowed to go out
+
+red hat has firewalld
+the firewall manager puts every network interface in zones, each zones has own rules
+zone drop is very restrictive and blocks all incoming connections
+zone trusted - all connections are accepted, for example in a office you ccepted all those incoming connections
+
+the default zone is public, every incoming connection is blocked, except  what we allow
+check the zone 
+firewall-cmd --get-default-zone
+
+change the zone
+firewall-cmd --set-default-zone=public
+
+to see current firewall rules
+sudo firewall-cmd --list-all
+ the output it will show the cockpit, where you can use a command to check the port are listening for the service cockpit
+sudo firewall-cmd --info-service=cockpit 
+ the output it will show the cockpit servie allow incoming connections to port example 9595 through a tcp protocol
+ 
+to allow traffic can be both
+sudo firewall-cmd --add-service=http   OR    sudo firewall-cmd --add-port=80/tcp
+
+then if you check the list, it will add a new rule in front of the cockpit
+sudo firewall-cmd --list-all
+
+to remove
+sudo firewall-cmd --remove-service=http    OR    sudo firewall-cmd --remove-port=80/tcp
+
+instead to block all incoming traffic, can use different rule based on where the traffic is coming from
+sudo firewall-cmd --add-source=10.11.12.0/24 --zone=trusted
+
+block
+sudo firewall-cmd --add-source=10.11.12.0/24 --zone=block --permanent 
+sudo firewall-cmd --reload
+sudo firewall-cmd --zone=block --list-all    #verify
+
+check active zones
+firewall-cmd --get-active-zones
+
+Allow all traffic that is coming from any IP in this network range: 10.11.12.0 to 10.11.12.255 (i.e 10.11.12.0/24), 
+add the required rule in the trusted zone and the rule must be permanent.
+#
+sudo firewall-cmd --add-source=10.11.12.0/24 --zone=trusted --permanent
+
+remove filter based on ip addr
+sudo firewall-cmd --remove-source=10.11.12.0/24 --zone=trusted
+
+all the rules set above are no permanent if reboot the rules will be lost, to keep permanent does those commands below
+sudo firewall-cmd --add-port=123/tcp                                                                              add
+sudo firewall-cmd --list-all                                                                                      check
+sudo firewall-cmd --runtime-to-permanent       OR       sudo firewall-cmd --add-port=123/tcp --permanent          permanent
+
+
+SOFT and HARD limits===================================
+
+nfsuser user is holding hundred of processes, which is degrading the performance of the server. Therefore, we have a requirement to limit its maximum processes. Please set its maximum process limits as below:
+soft limit = 1024
+hard_limit = 2027
+
+vi /etc/security/limits.conf
+nfsuser         soft    nproc           1024
+nfsuser         hard    nproc           2027
+
+
+SELinux ==================================================================
+
+
+yum -y install selinux*
+
+sestatus
+
+# to keep persistent vi /etc/selinux/config or /etc/sysconfig/selinux 
+SELINUX=Permissive   (edit this line)
+
+
+
+MOTD =====================================
+
+just add text in
+/etc/motd
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
