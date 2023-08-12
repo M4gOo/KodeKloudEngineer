@@ -765,7 +765,7 @@ Install ansible version 4.9.0 on Jump host using pip3 only. Make sure Ansible bi
 pip uninstall ansible ansible-base
         
 pip3 install ansible==4.9.0 --user     
-pip3 install ansible==4.9.0 
+sudo pip3 install ansible==4.9.0     make global the installation of ansible, all users on machine can run ansible
 
 
 #confirm the version. The version displayed is for the associated ansible-core package.
@@ -781,11 +781,7 @@ When you install an ansible package 4.X.X comes with ansible core, before on ans
 
 -----------------------------------------
 
-make global the installation of ansible --------------------------------------------
-pip3 install ... drops scripts into ~/.local/bin which is not the default for linux $PATH.
-add ~/.local/bin to your $PATH, into .bashrc file:
 
-export PATH="$HOME/.local/bin:$PATH"
 
 
 
