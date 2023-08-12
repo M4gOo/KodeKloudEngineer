@@ -690,7 +690,7 @@ sudo vi  /etc/yum.repos.d/<repo>.repo
 [base]    ->name of the repo
 name=CentOS-$releasever - Base      -> long name for the repo
 mirrorlist=http://mirrorlist.centos.org/?release=$releasever&arch=$basearch&repo=os&infra=$infra
-#baseurl=http://mirror.centos.org/centos/$releasever/os/$basearch/      ->tells where the repo is located, can be local or  in the internet
+baseurl=http://mirror.centos.org/centos/$releasever/os/$basearch/      ->tells where the repo is located, can be local or  in the internet
 enabled = 1         -> 1 means available for use 
 gpgcheck=1          -> check the validity of the package using gpg keys
 gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-CentOS-7     ->where is the gpg located
