@@ -232,6 +232,12 @@ SED =====================================================
   
   sed -i 's~#%$2jh//238720//31223~$2//23872031223~g' file
 
+  delete a specific word
+  sudo sed -i '/<word>/d' test.txt > test_deleted_word.txt 
+  sudo sh -c "sed '/code/d' file.txt > file_delete.txt"
+
+  Replace all occurrence of word or to fo
+  sed 's/\bor\b/for/g' /home/FILE.txt > /home/FILE_REPLACE.txt
 
 LAST ==================================================
 
