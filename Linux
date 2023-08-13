@@ -983,6 +983,20 @@ Redirect 302 /blog/ http://www.stapp02.stratos.xfusioncorp.com:5003/news/
 
 </VirtualHost>
 
+
+APACHE  no listening sockets available, shutting down =============================== TROUBLESHOOTING
+
+systemctl status httpd
+Status: "Reading configuration..."
+no listening sockets available, shutting dow
+
+netstat -pan | grep LISTEN
+tcp        0      0 127.0.0.1:5001          0.0.0.0:*               LISTEN      601/sendmail: accep 
+(there is another process running on port 5001)
+
+
+
+
 GPG encryption =======================================
 
 We have confidential data that needs to be transferred to a remote location, 
