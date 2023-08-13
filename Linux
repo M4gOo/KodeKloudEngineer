@@ -958,6 +958,30 @@ Content-Type: text/html; charset=UTF-8
 Welcome to the xFusionCorp Industries!
 -----------------------------------------------
 
+REDIRECT APACHE ===========================================
+
+vi /etc/httpd/conf/httpd.conf
+Listen = 8080
+
+vi /etc/httpd/conf.d/main.conf
+
+<VirtualHost *:8080>
+
+ServerName stapp02.stratos.xfusioncorp.com
+
+Redirect 301 / http://www.stapp02.stratos.xfusioncorp.com:8080/
+
+</VirtualHost>
+
+ 
+
+<VirtualHost *:8080>
+
+ServerName www.stapp02.stratos.xfusioncorp.com:8080/blog/
+
+Redirect 302 /blog/ http://www.stapp02.stratos.xfusioncorp.com:5003/news/
+
+</VirtualHost>
 
 GPG encryption =======================================
 
@@ -982,7 +1006,7 @@ vi /etc/logrotate.d/httpd  (add monthly and rotate 3)
  rotate 3  (this means for 3 months)
 
 
-=======================================================
+IPTABLES    =======================================================
 The backup management application code is deployed under Apache on the backup server itself, and Nginx is running as a reverse proxy on the same server. 
 Apache and Nginx ports are 6400 and 8099, respectively. We have iptables firewall installed on this server. 
 We want to open all incoming connections to Nginx's port and block all incoming connections to Apache's port. Also make sure rules are permanent.
@@ -992,4 +1016,28 @@ iptables -A INPUT -p tcp --dport 8099 -m conntrack --ctstate NEW,ESTABLISHED -j 
 iptables -A INPUT -p tcp --dport 6400 -m conntrack --ctstate NEW -j REJECT
 iptables -L --line-numbers
 service iptables save    (to make persistent after reboot)
+
+
+
+Install And Configure SFTP =========================================
+
+
+
+
+Tomcat application server ===========================================
+
+JAVA-------------------------
+https://www.linode.com/docs/guides/apache-tomcat-on-centos-8/
+
+ vi /usr/local/tomcat/conf/server.xml
+change port here
+ <Connector port="5001" protocol="HTTP/1.1"
+
+               port="5001" protocol="HTTP/1.1"
+
+copy the file java into this dir
+cp /tmp/ROOT.war /usr/local/tomcat/webapps
+
+curl -i http://server1:5001
+
 
