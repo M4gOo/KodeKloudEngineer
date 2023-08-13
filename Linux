@@ -160,6 +160,9 @@ PermitRootLogin no
 # the setting of "PermitRootLogin without-password".
 sudo systemctl restart sshd
 
+DNS ===========================
+
+cat /etc/resolv.conf
 
 CHMOD   =================================================
 
@@ -994,6 +997,9 @@ netstat -pan | grep LISTEN
 tcp        0      0 127.0.0.1:5001          0.0.0.0:*               LISTEN      601/sendmail: accep 
 (there is another process running on port 5001)
 
+iptables -A INPUT -p tcp -m tcp --dport 5001 -j ACCEPT
+service iptables save
+service iptables restart
 
 
 
