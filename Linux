@@ -926,3 +926,70 @@ systemctl enable haproxy --now
 MariaDB Troubleshooting ==============================================
 
 
+systemctl status mariadb
+Can't create file /var/lib/mysql/user.lower-test
+
+chown -R mysql:mysql /var/lib/mysql
+systemctl restart mariadb
+
+
+Configure Headers response APACHE ===================================
+
+vi /etc/httpd/conf/httpd.conf
+at the end of the file add
+Header set X-XSS-Protection "1; mode=block"
+Header always append X-Frame-Options SAMEORIGIN
+Header set X-Content-Type-Options nosniff
+
+test the headers-----------------------
+curl -i http://localhost:5000
+HTTP/1.1 200 OK
+Date: Sun, 13 Aug 2023 13:47:54 GMT
+Server: Apache/2.4.37 (Red Hat Enterprise Linux)
+X-Frame-Options: SAMEORIGIN
+Last-Modified: Sun, 13 Aug 2023 13:40:14 GMT
+ETag: "27-602ce15e5781b"
+Accept-Ranges: bytes
+Content-Length: 39
+X-XSS-Protection: 1; mode=block
+X-Content-Type-Options: nosniff
+Content-Type: text/html; charset=UTF-8
+
+Welcome to the xFusionCorp Industries!
+-----------------------------------------------
+
+
+GPG encryption =======================================
+
+We have confidential data that needs to be transferred to a remote location, 
+Need to decrypt data we received from a remote location in order to understand its content.
+
+gpg --import public_key.asc
+gpg --import private_key.asc
+gpg --encrypt -r name@example.com --armor < encrypt_me.txt  -o encrypted_me.asc
+gpg --decrypt decrypt_me.asc > decrypted_me.txt
+[root@server1 home]# ls
+decrypt_me.asc  decrypted_me.txt  encrypt_me.txt  encrypted_me.asc  bob  private_key.asc  public_key.asc
+
+
+
+LogRotate ============================================
+
+They are expecting significant traffic/usage of squid on app servers after that. This will generate massive logs, creating huge log files. 
+ls /etc/logrotate.d
+vi /etc/logrotate.d/httpd  (add monthly and rotate 3)
+ monthly
+ rotate 3  (this means for 3 months)
+
+
+=======================================================
+The backup management application code is deployed under Apache on the backup server itself, and Nginx is running as a reverse proxy on the same server. 
+Apache and Nginx ports are 6400 and 8099, respectively. We have iptables firewall installed on this server. 
+We want to open all incoming connections to Nginx's port and block all incoming connections to Apache's port. Also make sure rules are permanent.
+
+systemctl enable iptables --now
+iptables -A INPUT -p tcp --dport 8099 -m conntrack --ctstate NEW,ESTABLISHED -j ACCEPT
+iptables -A INPUT -p tcp --dport 6400 -m conntrack --ctstate NEW -j REJECT
+iptables -L --line-numbers
+service iptables save    (to make persistent after reboot)
+
