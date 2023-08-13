@@ -993,13 +993,14 @@ systemctl status httpd
 Status: "Reading configuration..."
 no listening sockets available, shutting dow
 
-netstat -pan | grep LISTEN
+netstat -pan | grep LISTEN      OR   netstat -lnp | grep LISTEN 
 tcp        0      0 127.0.0.1:5001          0.0.0.0:*               LISTEN      601/sendmail: accep 
 (there is another process running on port 5001)
 
 iptables -A INPUT -p tcp -m tcp --dport 5001 -j ACCEPT
 service iptables save
 service iptables restart
+
 
 
 
