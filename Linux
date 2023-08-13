@@ -1034,6 +1034,18 @@ Add a user ravi in htpasswd and set its password to B4zNgHA7Ya
   sudo curl http://localhost:8080 -u ravi   (worked! - make sure to put any index.html to test)
 
 
+PAM Authentication For Apache =============================================================
+
+We have a requirement where we want to password protect a directory in the Apache web server document root. 
+We want to password protect http://<website-url>:<apache_port>/protected URL as per the following requirements
+We want to use basic authentication.
+We do not want to use htpasswd file based authentication. Instead, we want to use PAM authentication, 
+i.e Basic Auth + PAM so that we can authenticate with a Linux user.
+We already have a user mark with password BruCStnMT5 which you need to provide access to.
+
+
+
+
 
 GPG encryption =======================================
 
@@ -1133,6 +1145,7 @@ server {
            proxy_pass http://localhost:6400;          ---> add this to the vi /etc/nginx/nginx.conf
         }
     }
+
 
 
 
