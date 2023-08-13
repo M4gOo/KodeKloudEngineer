@@ -782,16 +782,147 @@ When you install an ansible package 4.X.X comes with ansible core, before on ans
 -----------------------------------------
 
 
+CHECK LISTEN PORTS ======================================
+
+cat /etc/httpd/conf/httpd.conf | grep Listen
+
+cat /etc/nginx/nginx.conf | grep listen
 
 
 
+INSTALL POSFIX and DOVECOT- EMAIL SERVER ========================================
+
+Postfix is an open-source mail transfer agent (MTA), a service used to send and receive emails. 
+Dovecot is an IMAP/POP3 server and handle local delivery and user authentication.
+
+CHECK IF THERE IS ANOTHER EMAIL SERVER ON THE SERVER
+rpm -qa | grep sendmail
+
+in case there is just remmove
+dnf remove sendmail
+
+dnf update
+sudo dnf install -y postfix
+rpm -qa|grep postfix
+systemctl enable postfix
+
+configure an email -------------------------------
+
+vi /etc/postfix/main.cf
+myhostname = stmail01.stratos.xfusioncorp.com  
+mydomain = stratos.xfusioncorp.com 
+myorigin = $mydomain
+inet_interfaces = all
+  comment in 
+    #inet_interfaces = localhost
+
+mydestination = $myhostname, localhost.$mydomain, localhost, $mydomain
+mynetworks = 172.16.238.0/24, 127.0.0.0/8
+home_mailbox = Maildir/
+
+test config -----------------------------------------
+
+user add john -p dCV3szSGNA
+dnf install -y telnet
+telnet stmail01 25
+EHLO localhost
+mail from:john@stratos.xfusioncorp.com
+rcpt to:john@stratos.xfusioncorp.com
+DATA
+354 End data with <CR><LF>.<CR><LF>
+test mail
+.
+quit
+
+
+login as john user
+[john@stmail01 new]$ pwd
+/home/john/Maildir/new
+[john@stmail01 new]$ cat 1691920400.V801I4b15709M152300.stmail01.stratos.xfusioncorp.com 
+Return-Path: <john@stratos.xfusioncorp.com>
+X-Original-To: john@stratos.xfusioncorp.com
+Delivered-To: john@stratos.xfusioncorp.com
+Received: from localhost (stmail01 [172.16.238.17])
+        by stmail01.stratos.xfusioncorp.com (Postfix) with ESMTP id 3135E47E3090
+        for <john@stratos.xfusioncorp.com>; Sun, 13 Aug 2023 09:52:53 +0000 (UTC)
+Message-Id: <20230813095306.3135E47E3090@stmail01.stratos.xfusioncorp.com>
+Date: Sun, 13 Aug 2023 09:52:53 +0000 (UTC)
+From: john@stratos.xfusioncorp.com
+
+test mail
+
+configure dovecot -------------------------
+vi /etc/dovecot/dovecot.conf
+protocols = imap pop3 lmtp 
+listen = *, ::
+vi /etc/dovecot/conf.d/10-mail.conf 
+ mail_location = maildir:~/Maildir
+vi /etc/dovecot/conf.d/10-auth.conf 
+disable_plaintext_auth = yes
+auth_mechanisms = plain login
+vi /etc/dovecot/conf.d/10-master.conf
+unix_listener auth-userdb {
+    #mode = 0666
+    user = postfix
+    group = postfix
+
+
+test the dovecot
+
+telnet stmail01 110
+Trying 172.16.238.17...
+Connected to stmail01.
+Escape character is '^]'.
++OK Dovecot ready.
+john
+-ERR Unknown command.
+user john
++OK
+pass dCV3szSGNA
++OK Logged in.
+retr 1
++OK 508 octets
+Return-Path: <john@stratos.xfusioncorp.com>
+X-Original-To: john@stratos.xfusioncorp.com
+Delivered-To: john@stratos.xfusioncorp.com
+Received: from localhost (stmail01 [172.16.238.17])
+        by stmail01.stratos.xfusioncorp.com (Postfix) with ESMTP id 3135E47E3090
+        for <john@stratos.xfusioncorp.com>; Sun, 13 Aug 2023 09:52:53 +0000 (UTC)
+Message-Id: <20230813095306.3135E47E3090@stmail01.stratos.xfusioncorp.com>
+Date: Sun, 13 Aug 2023 09:52:53 +0000 (UTC)
+From: john@stratos.xfusioncorp.com
+
+test mail
+.
+
+
+Install and Configure HaProxy LBR =============================================================================
+apache is running on port 3002 on all app servers. HAproxy must serve on default http port
+--run the command netstat -anp | grep httpd to check the port opened in the app servers
+
+vi /etc/haproxy/haproxy.cfg
+yum install haproxy -y
+
+cat /etc/haproxy/haproxy.cfg |grep app
+    default_backend             app
+
+frontend main
+    bind *:80
+
+backend app   
+    balance     roundrobin
+    server  app1 127.0.0.1:5001 check
+    server  app2 127.0.0.1:5002 check
+    server  app3 127.0.0.1:5003 check
+    server  app4 127.0.0.1:5004 check
+    server app1 172.16.238.10:3002 check
+    server app1 172.16.238.11:3002 check
+    server app1 172.16.238.12:3002 check
+
+systemctl enable haproxy --now
 
 
 
-
-
-
-
-
+MariaDB Troubleshooting ==============================================
 
 
