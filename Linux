@@ -1002,6 +1002,37 @@ service iptables save
 service iptables restart
 
 
+Configure protected directories in Apache =================================
+
+There are some confidential directories in the document root that need to be password protected. 
+Since they are using Apache for hosting the websites, the production support team has decided to use .htaccess with basic auth. 
+There is a website that needs to be uploaded to /var/www/html/security on App Server 3. However, we need to set up the authentication before that.
+Add a user ravi in htpasswd and set its password to B4zNgHA7Ya
+
+  mkdir -p  /var/www/html/security/.htpasswd
+  sudo vi .htaccess
+
+  AuthType Basic
+  AuthName "Secure Content"
+  AuthUserFile /var/www/html/security/.htpasswd
+  require valid-user
+
+  sudo htpasswd -c /var/www/html/finance/.htpasswd ravi
+       password:B4zNgHA7Ya
+       retype password:B4zNgHA7Ya
+   vi /etc/httpd/conf/httpd.conf
+  # AllowOverride controls what directives may be placed in .htaccess files.
+    # It can be "All", "None", or any combination of the keywords:
+    #   Options FileInfo AuthConfig Limit
+    #
+    AllowOverride AuthConfig      (change here for AuthConfig)
+
+  AllowOverride none (or) ALL --> AllowOverride AuthConfig       ----IN /VAR/WWW/HTML DIRECTORY U WILL FIND .HTACCESS NAME
+
+  sudo systemctl restart httpd
+  sudo curl http://localhost:8080    (blocked)
+  sudo curl http://localhost:8080 -u ravi   (worked! - make sure to put any index.html to test)
+
 
 
 GPG encryption =======================================
@@ -1028,10 +1059,19 @@ vi /etc/logrotate.d/httpd  (add monthly and rotate 3)
 
 
 IPTABLES    =======================================================
+
+sudo iptables -nvL      OR          cat /etc/sysconfig/iptables
+         
+ sudo iptables -R INPUT 5 -p tcp --dport 8089 -s 172.16.238.14 -j ACCEPT       Accept port 8089 for LBR host(172.16.238.14)
+ sudo iptables -A INPUT -p tcp --dport 8089 -j DROP                            Block incoming port 8089
+ sudo service iptables save
+
 The backup management application code is deployed under Apache on the backup server itself, and Nginx is running as a reverse proxy on the same server. 
 Apache and Nginx ports are 6400 and 8099, respectively. We have iptables firewall installed on this server. 
 We want to open all incoming connections to Nginx's port and block all incoming connections to Apache's port. Also make sure rules are permanent.
 
+
+yum install -y iptables-services
 systemctl enable iptables --now
 iptables -A INPUT -p tcp --dport 8099 -m conntrack --ctstate NEW,ESTABLISHED -j ACCEPT
 iptables -A INPUT -p tcp --dport 6400 -m conntrack --ctstate NEW -j REJECT
@@ -1060,5 +1100,46 @@ copy the file java into this dir
 cp /tmp/ROOT.war /usr/local/tomcat/webapps
 
 curl -i http://server1:5001
+
+
+Linux Nginx as Reverse Proxy ============================================
+
+changing port------------------------
+yum -y install httpd
+vi /etc/httpd/conf/httpd.conf
+Listen 6400
+
+yum -y install nginx
+vi /etc/nginx/nginx.conf
+    server {
+        listen       8098 default_server;
+        listen       [::]:8098 default_server;
+
+ systemctl enable nginx --now
+
+curl localhost:8098     -> just to check if it is working
+
+vi /etc/nginx/nginx.conf   (watch out for the indetation)  Configure Nginx as a reverse proxy server for Apache
+server {
+        listen       8098 default_server;
+        listen       [::]:8098 default_server;
+        server_name  _;
+        root         /usr/share/nginx/html;
+
+        # Load configuration files for the default server block.
+        include /etc/nginx/default.d/*.conf;
+
+        location / {
+           proxy_pass http://localhost:6400;          ---> add this to the vi /etc/nginx/nginx.conf
+        }
+    }
+
+
+
+
+
+
+
+
 
 
