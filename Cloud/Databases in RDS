@@ -1,0 +1,65 @@
+
+Aurora MySQL-Compatible Edition
+Aurora MySQL is Amazon’s enterprise-class MySQL-compatible database.
+
+Aurora MySQL offers:
+
+Up to five times the throughput of MySQL Community Edition
+Up to 128 TB of autoscaling SSD storage
+Six-way replication across three Availability Zones
+Up to 15 read replicas with replica lag under 10-ms
+Automatic monitoring with failover
+
+
+
+
+Aurora PostgreSQL is Amazon’s enterprise-class PostgreSQL-compatible database.
+
+Aurora PostgreSQL offers:
+
+Up to three times the throughput of PostgreSQL
+Up to 128 TB of autoscaling SSD storage
+Six-way replication across three Availability Zones
+Up to 15 read replicas with replica lag under 10-ms
+Automatic monitoring with failover
+
+
+
+
+MySQL is the most popular open source database in the world. MySQL on RDS offers the rich features of the MySQL community edition with the flexibility to easily scale compute resources or storage capacity for your database.
+Supports database size up to 64 TiB.
+Supports General Purpose, Memory Optimized, and Burstable Performance instance classes.
+Supports automated backup and point-in-time recovery.
+Supports up to 15 Read Replicas per instance, within a single Region or 5 read replicas cross-region.
+
+
+
+MariaDB Community Edition is a MySQL-compatible database with strong support from the open source community, and extra features and performance optimizations.
+Supports database size up to 64 TiB.
+Supports General Purpose, Memory Optimized, and Burstable Performance instance classes.
+Supports automated backup and point-in-time recovery.
+Supports up to 15 Read Replicas per instance, within a single Region or 5 read replicas cross-region.
+Supports global transaction ID (GTID) and thread pooling.
+Developed and supported by the MariaDB open source community.
+
+
+
+PostgreSQL is a powerful, open-source object-relational database system with a strong reputation of reliability, stability, and correctness.
+High reliability and stability in a variety of workloads.
+Advanced features to perform in high-volume environments.
+Vibrant open-source community that releases new features multiple times per year.
+Supports multiple extensions that add even more functionality to the database.
+Supports up to 15 Read Replicas per instance, within a single Region or 5 read replicas cross-region.
+Supports General Purpose, Memory Optimized, and Burstable Performance instance classes.
+The most Oracle-compatible open-source database.
+
+
+
+Oracle® Database is a relational database management system developed by Oracle. Amazon RDS makes it easy to set up, operate, and scale Oracle Database deployments in the cloud. With Amazon RDS, you can deploy multiple editions of Oracle Database in minutes with cost-efficient and re-sizable hardware capacity.
+
+
+
+
+SQL Server is a relational database management system developed by Microsoft. Amazon RDS for SQL Server makes it easy to set up, operate, and scale SQL Server deployments in the cloud. With Amazon RDS, you can deploy multiple editions of SQL Server (2012, 2014, 2016, and 2017) including Express, Web, Standard and Enterprise, in minutes with cost-efficient and re-sizable compute capacity.
+
+
