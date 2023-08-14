@@ -7,6 +7,8 @@ https://docs.aws.amazon.com/rds/index.html
 
 https://aws.amazon.com/getting-started/hands-on/create-mysql-db/?ref=gsrchandson
 
+https://aws.amazon.com/rds/mysql/
+
 ### STEPS
 * Create an environment to run your MySQL database
 * Connect to the database
@@ -190,6 +192,22 @@ Deletion protection: When this option is enabled, you're prevented from accident
 ## FINALLY  CLICK ON   CREATE DATABASE 
 
 Depending on the DB instance class and storage allocated, it could take several minutes for the new DB instance to become available.
+
+
+#  Download MySQL Workbench 
+
+with that we can test our DB
+Remember to run MySQL Workbench from the same device from which you created the DB instance. The SECURITY GROUPD DB is placed in is configured to allow connection only from the device from which you created the DB instance.
+
+Just add port, username, password and hostname (whch is the endpoint - to see that just click on the DB created earlier)
+
+![image](https://github.com/M4gOo/KodeKloudEngineer/assets/57456345/9ad74e47-a6a0-4f0e-b600-b0a7a85d7d6d)
+
+
+
+
+
+
 
 
 
