@@ -1,10 +1,9 @@
 
-https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/Welcome.html
-
 It is a Free Tier  
 create MySQL instance
 Amazon RDS to create a MySQL DB Instance with db.t2.micro DB instance class, 20 GB of storage, and automated backups enabled with a retention period of one day
 
+https://docs.aws.amazon.com/rds/index.html
 
 ### STEPS
 * Create an environment to run your MySQL database
