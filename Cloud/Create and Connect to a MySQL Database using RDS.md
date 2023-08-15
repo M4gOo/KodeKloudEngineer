@@ -10,6 +10,30 @@ https://aws.amazon.com/rds/mysql/
 * Create an environment to run your MySQL database
 * Connect to the database
 
+### First difference SQL vs noSQL
+
+* SQL 
+use structured query language (SQL) to store and retrieve data, and have a predefined schema 
+vertically scalable (adding more CPU, RAM, or SSD capacity)                                        
+are table-based. Primary keys and foreign keys facilitate unique identifiers that the database assigns to rows of data in tables.
+used for legacy systems built around a relational structure
+are typically used in applications that require complex queries and transaction management
+follows ACID properties (Atomicity, Consistency, Isolation, Durability) for transaction management
+   Atomicity is a property that ensures that a database considers all transaction (to read, write, update or delete data) is treated as a single unit 
+   Consistency guarantees that a transaction never leaves your database in a half-finished state.
+   Isolation keeps transactions separated from each other until they're finished.
+   Durability ensures that changes made to the DB that are successfully committed will survive permanently, even in the case of system failures. This ensures that the data within the database will not be corrupted 
+                                               
+
+* NO SQL
+dynamic schemas for unstructured data
+horizontally scalable, can scale up or down easily to accommodate changes in usage or load. Handle higher traffic via a process called sharding, which adds more servers to your NoSQL database
+NoSQL databases are document, key-value, graph, or wide-column stores
+ideal for use in applications hat require high performance and scalability, such as web applications and mobile apps.
+provides developers with the ability to store and access data quickly and easily, without the overhead of a traditional relational database
+create documents without having to first define their structure. Each document can have its own unique structure.
+can add fields as you go
+
 
  
 ### Choose you Region, my case it will be N.Virginia
