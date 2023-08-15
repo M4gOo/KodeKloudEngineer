@@ -38,12 +38,12 @@ two standby DB instances -  it's called a Multi-AZ DB cluster deployment. This d
 Synchronous replication - data is written to the primary instance and synchronously replicates the data to an instance in a different AZ 
 
 * Synchronous replication is the process of copying data over a storage area network, local area network or wide area network so there are multiple, current copies of the data.
-Synchronous is mainly used for failover (if the primary node fails and for high-end transactional applications ([ERP-software system for finance, HR, manufacturing, supply chain], [CRM - tracks complex and dynamic data, 
+Synchronous is mainly used for failover and for high-end transactional applications ([ERP-software system for finance, HR, manufacturing, supply chain], [CRM - tracks complex and dynamic data, 
 like what emails a contact has opened, what pages customers visited on your website, what customers bought in the webpage.])  
-that need instant failover if the primary node fails
 
 
-Asynchronous replication - data is first written to primary storage and then to the replicas
+
+* Asynchronous replication - data is first written to primary storage and then to the replicas
 
 #
 
