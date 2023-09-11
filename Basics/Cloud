@@ -2,5 +2,5 @@ What is cloud?
 1 - On-Demand Self-Service - can provision capabilities as needed without requiring human interaction.
 2 - Broad Network Access - access services over the network and accessed through mobile phones, tablets, laptops, and workstations.
 3 - Resource Pooling - no control or knowledge over the exact location of the resources, those resources are pooled to serve multiple consumers.
-4 - Reapid Elasticity - capabilities can be elastically provisioned and released to scale rapidly in response to system load
+4 - Rapid Elasticity - capabilities can be elastically provisioned and released to scale rapidly in response to system load
 5 - Measured Service - Resource usage can be monitored, controlled, reported and billed. Pay for what you consume
